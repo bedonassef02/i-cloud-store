@@ -17,26 +17,19 @@ import {Product} from "./entities/product.entity";
 import {ParseMongoIdPipe} from "../common/pipes/parse-mongo-id.pipe";
 import {QueryFeature} from "../common/features/query.feature";
 import {IsProductExistPipe} from "./pipes/is-product-exist.pipe";
-import {FilesInterceptor} from "@nestjs/platform-express";
-import {UploadImagesInterceptor} from "./interceptors/upload-images.interceptor";
+import {CreateProductDto} from "./dto/create-product.dto";
+import {IsSubCategoryExistPipe} from "../sub-categories/pipes/is-sub-category-exist.pipe";
 
 @Controller('products')
 export class ProductsController {
     constructor(private readonly productsService: ProductsService) {
     }
 
-    // @Post()
-    // @UseInterceptors(AnyFilesInterceptor)
-    // create(@UploadedFiles() files: Array<Express.Multer.File>,
-    //        @Body() createProductDto: CreateProductDto,
-    //        @Body('subcategory', IsSubCategoryExistPipe) subcategory: string): Promise<Product> {
-    //     return this.productsService.create(createProductDto);
-    // }
-
     @Post()
-    @UseInterceptors(FilesInterceptor('files', 10, {dest: './uploads'}))
-    uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
-        console.log(files);
+    create(@Body() createProductDto: CreateProductDto,
+           @Body('subcategory', IsSubCategoryExistPipe) subcategory: string):
+        Promise<Product> {
+        return this.productsService.create(createProductDto);
     }
 
 
