@@ -1,26 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import {Injectable} from '@nestjs/common';
+import {CreateCategoryDto} from './dto/create-category.dto';
+import {UpdateCategoryDto} from './dto/update-category.dto';
+import {InjectModel} from "@nestjs/mongoose";
+import {Category} from "./entities/category.entity";
+import {Model} from "mongoose";
+import {SubCategoriesService} from "../sub-categories/sub-categories.service";
 
 @Injectable()
 export class CategoriesService {
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
-  }
+    constructor(@InjectModel(Category.name) private categoryModel: Model<Category>,
+                private subCategoriesService: SubCategoriesService) {
+    }
 
-  findAll() {
-    return `This action returns all categories`;
-  }
+    async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+        const createdCategory = new this.categoryModel(createCategoryDto);
+        return createdCategory.save();
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
-  }
+    async findAll(): Promise<Category[]> {
+        return this.categoryModel.find().exec();
+    }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
-  }
+    async findAllSubCategories(){
+        await this.subCategoriesService.findAll();
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
-  }
+    async findOne(id: string): Promise<Category> {
+        return this.categoryModel.findById(id).exec();
+    }
+
+    async update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
+        return this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, {new: true}).exec();
+    }
+
+    async remove(id: string): Promise<Category> {
+        return this.categoryModel.findByIdAndDelete(id).exec();
+    }
 }
