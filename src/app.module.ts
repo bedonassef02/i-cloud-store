@@ -10,12 +10,14 @@ import {CommonModule} from './common/common.module';
 import {ProductsModule} from './products/products.module';
 import {MulterModule} from "@nestjs/platform-express";
 import {ConfigModule} from "@nestjs/config";
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
     imports: [ConfigModule.forRoot({expandVariables: true}),
         MongooseModule.forRoot(process.env.DB_URI), MulterModule.register({
             dest: './upload',
-        }), CategoriesModule, SubCategoriesModule, CommonModule, ProductsModule],
+        }), CategoriesModule, SubCategoriesModule, CommonModule, ProductsModule, AuthModule, UsersModule],
     controllers: [AppController],
     providers: [AppService,
         {
