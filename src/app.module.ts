@@ -2,27 +2,42 @@ import {Module} from '@nestjs/common';
 import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {CategoriesModule} from './categories/categories.module';
-import {MongooseModule} from "@nestjs/mongoose";
-import {APP_FILTER} from "@nestjs/core";
-import {DuplicateKeyExceptionFilter} from "./common/filters/dublicate-key-exception.filter";
+import {MongooseModule} from '@nestjs/mongoose';
+import {APP_FILTER, APP_GUARD} from '@nestjs/core';
+import {DuplicateKeyExceptionFilter} from './common/filters/dublicate-key-exception.filter';
 import {SubCategoriesModule} from './sub-categories/sub-categories.module';
 import {CommonModule} from './common/common.module';
 import {ProductsModule} from './products/products.module';
-import {MulterModule} from "@nestjs/platform-express";
-import {ConfigModule} from "@nestjs/config";
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import {MulterModule} from '@nestjs/platform-express';
+import {ConfigModule} from '@nestjs/config';
+import {AuthModule} from './auth/auth.module';
+import {UsersModule} from './users/users.module';
+import {AuthGuard} from "./common/guards/auth.guard";
 
 @Module({
-    imports: [ConfigModule.forRoot({expandVariables: true}),
-        MongooseModule.forRoot(process.env.DB_URI), MulterModule.register({
+    imports: [
+        ConfigModule.forRoot({expandVariables: true}),
+        MongooseModule.forRoot(process.env.DB_URI),
+        MulterModule.register({
             dest: './upload',
-        }), CategoriesModule, SubCategoriesModule, CommonModule, ProductsModule, AuthModule, UsersModule],
+        }),
+        CategoriesModule,
+        SubCategoriesModule,
+        CommonModule,
+        ProductsModule,
+        AuthModule,
+        UsersModule,
+    ],
     controllers: [AppController],
-    providers: [AppService,
+    providers: [
+        AppService,
         {
             provide: APP_FILTER,
-            useClass: DuplicateKeyExceptionFilter
+            useClass: DuplicateKeyExceptionFilter,
+        },
+        {
+            provide: APP_GUARD,
+            useClass: AuthGuard
         }
     ],
 })

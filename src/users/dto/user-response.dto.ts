@@ -1,6 +1,7 @@
 interface UserResponseDto {
-    id: string;
-    username: string;
+  id: string;
+  username: string;
 
-    email: string;
+  email: string;
+  role: string;
 }

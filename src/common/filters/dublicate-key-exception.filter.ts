@@ -11,7 +11,8 @@ export class DuplicateKeyExceptionFilter implements ExceptionFilter {
 
     if (exception.code === 11000) {
       const statusCode = 409;
-      const message = 'This field is already in use. Duplicates are not allowed.';
+      const message =
+        'This field is already in use. Duplicates are not allowed.';
 
       response.status(statusCode).json({
         statusCode,
@@ -21,7 +22,10 @@ export class DuplicateKeyExceptionFilter implements ExceptionFilter {
       const statusCode = 500;
       const message = 'Internal server error';
 
-      this.logger.error(`Internal Server Error: ${exception.message}`, exception.stack);
+      this.logger.error(
+        `Internal Server Error: ${exception.message}`,
+        exception.stack,
+      );
 
       response.status(statusCode).json({
         statusCode,

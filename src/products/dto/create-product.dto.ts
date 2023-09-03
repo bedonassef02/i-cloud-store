@@ -2,17 +2,23 @@ import {
     ArrayMaxSize,
     ArrayMinSize,
     IsArray,
-    IsIn, IsMongoId,
+    IsIn,
+    IsMongoId,
     IsNotEmpty,
-    IsNumber, IsOptional,
+    IsNumber,
+    IsOptional,
     IsString,
     Length,
     Max,
-    Min
-} from "class-validator";
-import {Expose} from "class-transformer";
-import slugify from "slugify";
-import {PRODUCT_PAYMENT, PRODUCT_STATUS, PRODUCT_TYPE} from "../constants/constants";
+    Min,
+} from 'class-validator';
+import {Expose} from 'class-transformer';
+import slugify from 'slugify';
+import {
+    PRODUCT_PAYMENT,
+    PRODUCT_STATUS,
+    PRODUCT_TYPE,
+} from '../constants/constants';
 
 export class CreateProductDto {
     @IsNotEmpty()
@@ -59,6 +65,10 @@ export class CreateProductDto {
     @IsNotEmpty()
     @IsMongoId()
     subcategory: string;
+
+    @IsNotEmpty()
+    @IsMongoId()
+    user: string;
 
     @IsOptional()
     @Expose({name: 'slug'})
