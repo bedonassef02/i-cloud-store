@@ -54,6 +54,14 @@ export class ProductsController {
     return this.productsService.findAll(query);
   }
 
+  @Get('admin/pending')
+  @Roles('admin')
+  async findAllPending(
+    @Query() query: ProductsFeature,
+  ): Promise<ProductsResponse> {
+    return this.productsService.findAll(query, false);
+  }
+
   @Get(':id')
   @UsePipes(ParseMongoIdPipe)
   async findOne(@Param('id') id: string): Promise<Product> {

@@ -21,7 +21,10 @@ export class ProductsService {
     return createdProduct.save();
   }
 
-  async findAll(query: ProductsFeature): Promise<ProductsResponse> {
+  async findAll(
+    query: ProductsFeature,
+    accepted = true,
+  ): Promise<ProductsResponse> {
     const subcategory = query.subcategories
       ? { subcategory: { $in: query.subcategories } }
       : {};
@@ -37,6 +40,7 @@ export class ProductsService {
     const products = await this.productModel
       .find({
         $and: [
+          { accepted },
           { $or: query.searchQuery },
           subcategory,
           { price: { $gte: query.minPrice, $lte: query.maxPrice } },
@@ -53,6 +57,7 @@ export class ProductsService {
       info: this.paginationInfo(query, totalProductsCount),
     };
   }
+
   async findOne(id: string): Promise<Product> {
     return this.productModel.findById(id).exec();
   }
