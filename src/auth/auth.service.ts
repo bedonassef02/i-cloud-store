@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { UsersService } from '../users/users.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { ConfigService } from '@nestjs/config';
@@ -24,10 +23,6 @@ export class AuthService {
     const user = await this.usersService.check(loginUserDto);
     const token = this.generateToken(user);
     return { user, token };
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
   }
 
   remove(id: number) {

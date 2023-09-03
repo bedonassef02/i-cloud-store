@@ -1,14 +1,15 @@
-import {CanActivate, ExecutionContext, Injectable, UnauthorizedException} from '@nestjs/common';
-import {ProductsService} from "../products.service";
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { ProductsService } from '../products.service';
 
 @Injectable()
 export class IsSameUserGuard implements CanActivate {
-
-  constructor(private readonly productsService: ProductsService) {
-  }
-  async canActivate(
-      context: ExecutionContext,
-  ): Promise<boolean> {
+  constructor(private readonly productsService: ProductsService) {}
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const { id } = request.params;
     const user = request.user.id;
@@ -18,6 +19,8 @@ export class IsSameUserGuard implements CanActivate {
       return true;
     }
 
-    throw new UnauthorizedException(`You are not allowed to alter this product`);
+    throw new UnauthorizedException(
+      `You are not allowed to alter this product`,
+    );
   }
 }
