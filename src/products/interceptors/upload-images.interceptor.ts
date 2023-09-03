@@ -1,44 +1,21 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-  BadRequestException,
-} from '@nestjs/common';
-import { Observable, pipe } from 'rxjs';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import {Injectable, NestInterceptor, ExecutionContext, CallHandler} from '@nestjs/common';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class UploadImagesInterceptor implements NestInterceptor {
-  private readonly allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+    intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const interceptor = FileInterceptor('files', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: this.generateRandomFilename,
-      }),
-      fileFilter: this.imageFileFilter,
-    });
+        const request = context.switchToHttp().getRequest();
 
-    return next.handle();
-  }
+        const files = request.files;
 
-  private generateRandomFilename(req, file, callback): void {
-    const randomName = Array(32)
-      .fill(null)
-      .map(() => Math.round(Math.random() * 16).toString(16))
-      .join('');
-    callback(null, `${randomName}${extname(file.originalname)}`);
-  }
+        if(files) {
+            const images = files.map(file => {
+                return file.filename;
+            })
 
-  private imageFileFilter(req, file, callback): void {
-    const ext = extname(file.originalname).toLowerCase();
-    if (!this.allowedImageExtensions.includes(ext)) {
-      return callback(new BadRequestException('Only image files are allowed!'));
+            request.body.images = images;
+        }
+        return next.handle();
     }
-    callback(null, true);
-  }
 }

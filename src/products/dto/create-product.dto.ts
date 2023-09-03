@@ -54,7 +54,7 @@ export class CreateProductDto {
     @IsNumber()
     @Min(0)
     @Max(100000)
-    price: number;
+    price: number = 2000;
 
     @IsNotEmpty()
     @IsArray()

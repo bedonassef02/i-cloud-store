@@ -10,7 +10,7 @@ import {
     HttpStatus,
     UsePipes,
     Query,
-    UseGuards, UseInterceptors,
+    UseGuards, UseInterceptors, UploadedFile, UploadedFiles,
 } from '@nestjs/common';
 import {ProductsService} from './products.service';
 import {UpdateProductDto} from './dto/update-product.dto';
@@ -25,6 +25,8 @@ import {ProductsFeature} from './dto/products.feature';
 import {ProductsResponse} from "./types/products-response";
 import {AddUserIdToBodyInterceptor} from "./interceptors/add-user-id-to-body.interceptor";
 import {IsSameUserGuard} from "./guards/is-same-user.guard";
+import {FileInterceptor, FilesInterceptor} from "@nestjs/platform-express";
+import {UploadImagesInterceptor} from "./interceptors/upload-images.interceptor";
 
 @Controller('products')
 @UseGuards(AuthGuard)
@@ -34,13 +36,14 @@ export class ProductsController {
 
     @Post()
     @Roles('user')
-    @UseInterceptors(AddUserIdToBodyInterceptor)
+    @UseInterceptors(FilesInterceptor('images'), UploadImagesInterceptor, AddUserIdToBodyInterceptor)
     create(
         @Body() createProductDto: CreateProductDto,
         @Body('subcategory', IsSubCategoryExistPipe) subcategory: string,
     ): Promise<Product> {
         return this.productsService.create(createProductDto);
     }
+
 
     @Get()
     async findAll(@Query() query: ProductsFeature): Promise<ProductsResponse> {
