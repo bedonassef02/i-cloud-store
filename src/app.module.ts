@@ -11,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AuthGuard } from './common/guards/auth.guard';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AuthGuard } from './common/guards/auth.guard';
     ProductsModule,
     AuthModule,
     UsersModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [

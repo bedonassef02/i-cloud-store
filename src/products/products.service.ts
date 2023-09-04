@@ -21,6 +21,14 @@ export class ProductsService {
     return createdProduct.save();
   }
 
+  async accept(id: string): Promise<Product> {
+    return this.productModel.findByIdAndUpdate(
+      id,
+      { accepted: true },
+      { new: true },
+    );
+  }
+
   async findAll(
     query: ProductsFeature,
     accepted = true,

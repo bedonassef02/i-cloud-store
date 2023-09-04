@@ -50,16 +50,7 @@ export class ProductsController {
 
   @Get()
   async findAll(@Query() query: ProductsFeature): Promise<ProductsResponse> {
-    // console.log(query);
     return this.productsService.findAll(query);
-  }
-
-  @Get('admin/pending')
-  @Roles('admin')
-  async findAllPending(
-    @Query() query: ProductsFeature,
-  ): Promise<ProductsResponse> {
-    return this.productsService.findAll(query, false);
   }
 
   @Get(':id')

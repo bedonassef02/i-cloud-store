@@ -15,12 +15,13 @@ export class AuthService {
 
   async create(registerUserDto: RegisterUserDto): Promise<UserResponse> {
     const user = await this.usersService.create(registerUserDto);
-    const token = this.generateToken({ ...user, type: 'user' });
+    const token = this.generateToken({ ...user, role: 'user' });
     return { user, token };
   }
 
   async login(loginUserDto: LoginUserDto): Promise<UserResponse> {
     const user = await this.usersService.check(loginUserDto);
+    console.log(user);
     const token = this.generateToken(user);
     return { user, token };
   }

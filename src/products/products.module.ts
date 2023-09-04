@@ -36,6 +36,7 @@ import { diskStorage } from 'multer';
   ],
   controllers: [ProductsController],
   providers: [ProductsService],
+  exports: [ProductsService],
 })
 export class ProductsModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
